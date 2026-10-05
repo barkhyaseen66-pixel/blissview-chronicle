@@ -45,7 +45,10 @@ function Index() {
     const scroll = () => setScrolled(window.scrollY > 30);
     scroll(); window.addEventListener("scroll", scroll, { passive: true });
     const observer = new IntersectionObserver((entries) => entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add("is-visible"); observer.unobserve(entry.target); } }), { threshold: 0.08 });
-    document.querySelectorAll(".reveal").forEach(element => observer.observe(element));
+    document.querySelectorAll(".reveal").forEach(element => {
+      if (element.getBoundingClientRect().top > window.innerHeight) element.classList.add("reveal-pending");
+      observer.observe(element);
+    });
     return () => { window.removeEventListener("scroll", scroll); observer.disconnect(); };
   }, []);
 
